@@ -39,8 +39,8 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Badge */}
-          <motion.div
+         
+          {/* <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -48,7 +48,7 @@ const Hero = () => {
           >
             <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
             Available for Projects
-          </motion.div>
+          </motion.div> */}
 
           {/* Main headline */}
           <motion.h1
@@ -121,7 +121,7 @@ const Hero = () => {
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.5 }}
@@ -130,7 +130,7 @@ const Hero = () => {
         <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
           <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-bounce"></div>
         </div>
-      </motion.div>
+      </motion.div> */}
 
       {/* Contact Form Modal */}
       <AnimatePresence>
