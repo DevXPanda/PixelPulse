@@ -78,3 +78,18 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* Additional utilities for better deployment compatibility */
+@layer utilities {
+  .mix-blend-multiply {
+    mix-blend-mode: multiply;
+  }
+  
+  .filter {
+    filter: var(--tw-filter);
+  }
+  
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+  }
+}

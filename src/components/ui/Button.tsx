@@ -13,7 +13,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const variants = {
       primary: "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 focus:ring-blue-500 shadow-lg hover:shadow-xl",
       secondary: "bg-gray-900 text-white hover:bg-gray-800 focus:ring-gray-500",
-      outline: "border-2 border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50 focus:ring-gray-500"
+      outline: "border-2 border-white/20 text-white hover:bg-white/10 hover:border-white/30 focus:ring-white/500"
     };
     
     const sizes = {
