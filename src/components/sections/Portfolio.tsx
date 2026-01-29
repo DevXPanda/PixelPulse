@@ -85,13 +85,13 @@ const Portfolio = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="group"
+              className="group flex"
             >
-              <div className="h-full bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100">
+              <div className="h-[500px] w-full bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col">
                 {/* Header with gradient */}
                 <div className={`h-2 bg-gradient-to-r ${project.color}`}></div>
                 
-                <div className="p-8">
+                <div className="p-8 flex flex-col h-full">
                   {/* Industry Badge */}
                   <div className="inline-flex items-center px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-600 mb-4">
                     {project.industry}
@@ -103,7 +103,7 @@ const Portfolio = () => {
                   </h3>
 
                   {/* Work Done */}
-                  <div className="mb-6">
+                  <div className="mb-6 flex-grow">
                     <h4 className="text-sm font-semibold text-gray-700 mb-3">Work Done:</h4>
                     <div className="space-y-2">
                       {project.work.map((item, itemIndex) => (
@@ -116,12 +116,12 @@ const Portfolio = () => {
                   </div>
 
                   {/* Result */}
-                  <div className={`p-4 rounded-xl bg-gradient-to-r ${project.color} bg-opacity-10 border border-gray-200`}>
-                    <div className="flex items-center">
-                      <div className={`w-10 h-10 bg-gradient-to-r ${project.color} rounded-lg flex items-center justify-center mr-3`}>
+                  <div className={`p-4 rounded-xl bg-gradient-to-r ${project.color} bg-opacity-10 border border-gray-200 min-h-[80px] flex items-center`}>
+                    <div className="flex items-center w-full">
+                      <div className={`w-10 h-10 bg-gradient-to-r ${project.color} rounded-lg flex items-center justify-center mr-3 flex-shrink-0`}>
                         <project.resultIcon className="h-5 w-5 text-white" />
                       </div>
-                      <div>
+                      <div className="flex-grow">
                         <div className="text-sm font-medium text-gray-700">Result:</div>
                         <div className="text-lg font-bold text-gray-900">
                           {project.result}
