@@ -149,9 +149,9 @@ This project is open source and available under the [MIT License](LICENSE).
 ## 📞 Support
 
 For questions or support:
-- Email: hello@pixelpulses.com
-- Phone: +1 (555) 123-4567
-- WhatsApp: +1 (555) 123-4567
+- Email: pixelpulse340@gmail.com
+- Phone: +91 9936968762
+- WhatsApp: +91 9936968762
 
 ---
 
