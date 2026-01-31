@@ -151,13 +151,13 @@ const Header = () => {
           initial={{ x: '100%' }}
           animate={{ x: isMobileMenuOpen ? 0 : '100%' }}
           transition={{ duration: 0.3, ease: 'easeInOut' }}
-          className="absolute right-0 top-0 h-full w-80 bg-white shadow-xl overflow-y-auto"
+          className="absolute right-0 top-0 h-full w-72 sm:w-80 bg-white shadow-xl overflow-y-auto"
         >
           <div className="p-6">
             {/* Logo and close button */}
             <div className="flex items-center justify-between mb-8">
               <img 
-                src="/PixelPulses.png" 
+                src="/download.svg" 
                 alt="Pixel Pulses" 
                 className="h-8 w-auto"
               />
@@ -186,7 +186,7 @@ const Header = () => {
             <div className="border-t border-gray-200 pt-6 space-y-4">
               <div className="flex items-center text-gray-600">
                 <Phone className="h-5 w-5 mr-3 text-blue-600" />
-                <span>++91-9355096544</span>
+                <span>+91-9355096544</span>
               </div>
               <div className="flex items-center text-gray-600">
                 <Mail className="h-5 w-5 mr-3 text-blue-600" />

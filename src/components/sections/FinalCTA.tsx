@@ -40,7 +40,7 @@ const FinalCTA = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
           >
             Ready to Scale Your
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
@@ -53,7 +53,7 @@ const FinalCTA = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="text-xl sm:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed"
+            className="text-lg sm:text-xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed"
           >
             Let's create a powerful digital presence that drives growth, increases revenue, 
             and establishes your brand as an industry leader.

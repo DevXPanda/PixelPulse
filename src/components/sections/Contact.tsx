@@ -11,6 +11,7 @@ import {
   Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -18,10 +19,12 @@ const Contact = () => {
     email: '',
     businessType: '',
     serviceNeeded: '',
-    budgetRange: ''
+    budgetRange: '',
+    message: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const businessTypes = [
     'E-commerce',
@@ -63,22 +66,47 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    // In production, integrate with EmailJS, Formspree, or custom webhook
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    console.log('Form submitted:', formData);
-    alert('Thank you for your inquiry! I will get back to you within 24 hours.');
-    
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      businessType: '',
-      serviceNeeded: '',
-      budgetRange: ''
-    });
-    setIsSubmitting(false);
+    try {
+      // EmailJS configuration
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'your_service_id';
+      const adminTemplateId = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID || 'template_admin_notification';
+      const clientTemplateId = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID || 'template_client_reply';
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'your_public_key';
+
+      // Prepare template parameters
+      const templateParams = {
+        ...formData,
+        submission_date: new Date().toLocaleString()
+      };
+
+      // Send email to admin
+      await emailjs.send(serviceId, adminTemplateId, templateParams, publicKey);
+      
+      // Send confirmation email to client
+      await emailjs.send(serviceId, clientTemplateId, templateParams, publicKey);
+
+      setShowSuccess(true);
+      
+      // Auto-hide popup after 3 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        businessType: '',
+        serviceNeeded: '',
+        budgetRange: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      alert('Sorry, there was an error sending your message. Please try again or contact us directly at pixelpulse340@gmail.com');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -179,7 +207,7 @@ const Contact = () => {
             viewport={{ once: true }}
             className="lg:col-span-2"
           >
-            <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
+            <div className="relative bg-gray-50 rounded-2xl p-8 border border-gray-200">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -279,6 +307,8 @@ const Contact = () => {
                   <textarea
                     id="message"
                     name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
                     rows={4}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
                     placeholder="Tell me more about your project..."
@@ -308,6 +338,31 @@ const Contact = () => {
                   We will respond within 24 hours. Your information is kept confidential.
                 </p>
               </form>
+
+              {/* Success Popup */}
+              {showSuccess && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="absolute inset-0 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 pointer-events-none"
+                >
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      Message Sent 🎉
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      We will get back to you within 24 hours.
+                    </p>
+                  </div>
+                </motion.div>
+              )}
             </div>
           </motion.div>
         </div>

@@ -223,7 +223,7 @@ const Services = () => {
             Complete digital growth — from traffic to conversion
           </p>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            Services I Offer
+            Services We Offer
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Comprehensive digital solutions designed to accelerate your business growth and maximize your online presence
@@ -305,7 +305,7 @@ const Services = () => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto mx-4 sm:mx-auto"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Modal Header */}
