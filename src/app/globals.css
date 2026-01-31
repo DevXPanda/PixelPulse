@@ -1,10 +1,12 @@
 @import "tailwindcss";
 
+/* ---------------- ROOT THEME ---------------- */
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
+/* Tailwind inline theme variables */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -12,6 +14,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -19,35 +22,45 @@
   }
 }
 
+/* ---------------- GLOBAL RESET ---------------- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+
+  /* 🔥 Prevent mobile browser text auto zoom */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
+
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* 🔥 Fix horizontal overflow issue */
 }
 
-/* Custom animations */
+/* ---------------- CUSTOM ANIMATIONS ---------------- */
 @keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
 
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-
-/* Grid pattern utility */
+/* ---------------- GRID BACKGROUND ---------------- */
 .bg-grid-white {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.05)'%3e%3cpath d='m0 .5h32m-32 32v-32'/%3e%3c/svg%3e");
 }
@@ -56,41 +69,39 @@ body {
   background-size: 16px 16px;
 }
 
-/* Smooth scroll behavior */
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
+/* ---------------- SCROLLBAR ---------------- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
 ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
 }
+::-webkit-scrollbar-thumb:hover { background: #555; }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Additional utilities for better deployment compatibility */
+/* ---------------- FIXES FOR MOBILE DEPLOYMENT ---------------- */
 @layer utilities {
-  .mix-blend-multiply {
-    mix-blend-mode: multiply;
-  }
-  
-  .filter {
-    filter: var(--tw-filter);
-  }
-  
+
+  /* Prevent Safari blur issue */
   .backdrop-blur-sm {
     backdrop-filter: blur(4px);
   }
+
+  /* Fix blend mode rendering */
+  .mix-blend-multiply {
+    mix-blend-mode: multiply;
+  }
+
+  .filter {
+    filter: var(--tw-filter);
+  }
+
+  /* Prevent layout overflow */
+  .no-overflow {
+    overflow: hidden;
+  }
+}
+
+/* ---------------- FIX HERO TEXT SCALING ---------------- */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
 }

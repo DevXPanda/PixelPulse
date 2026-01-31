@@ -85,13 +85,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-/* ✅ Correct way to set mobile viewport in App Router */
+/* Correct way to set mobile viewport in App Router */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
-/* ✅ SEO Metadata */
+/* SEO Metadata */
 export const metadata: Metadata = {
   title:
     "Pixel Pulses - Digital Growth Agency | High-Converting Ads, SEO & Web Development",
@@ -146,7 +148,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="text-base">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
