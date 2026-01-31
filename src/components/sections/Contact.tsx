@@ -130,7 +130,7 @@ const Contact = () => {
                 <Phone className="h-5 w-5 text-blue-600 mr-4" />
                 <div>
                   <div className="font-medium text-gray-900">Phone</div>
-                  <div className="text-gray-600">+91 9936968762</div>
+                  <div className="text-gray-600">+91-9355096544</div>
                 </div>
               </div>
 
@@ -138,7 +138,7 @@ const Contact = () => {
                 <MessageCircle className="h-5 w-5 text-green-600 mr-4" />
                 <div>
                   <div className="font-medium text-gray-900">WhatsApp</div>
-                  <div className="text-gray-600">+91 9936968762</div>
+                  <div className="text-gray-600">+91-9355096544</div>
                 </div>
               </div>
 

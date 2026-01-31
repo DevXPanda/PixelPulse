@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   description: "Transform your business with data-driven digital marketing and cutting-edge web development. Specializing in performance marketing, SEO, MERN stack development, and AI solutions that drive real results.",
   keywords: "digital marketing, SEO, web development, performance marketing, MERN stack, AI solutions, Meta Ads, Google Ads, social media management",
   authors: [{ name: "Pixel Pulses" }],
+  icons: {
+    icon: '/download.svg',
+    shortcut: '/download.svg',
+    apple: '/download.svg',
+  },
   openGraph: {
     title: "Pixel Pulses - Digital Growth Agency",
     description: "Transform your business with data-driven digital marketing and cutting-edge web development",

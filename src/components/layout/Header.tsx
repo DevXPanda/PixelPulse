@@ -42,7 +42,7 @@ const Header = () => {
         transition={{ duration: 0.8 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-sm shadow-lg border-b border-gray-200'
+            ? 'bg-white/95 backdrop-blur-md shadow-lg rounded-full m-2 mt-4 border border-gray-200'
             : 'bg-transparent'
         }`}
       >
@@ -55,11 +55,13 @@ const Header = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="flex items-center"
             >
-              <div className={`text-2xl font-bold transition-colors duration-300 ${
-                isScrolled ? 'text-gray-900' : 'text-white'
-              }`}>
-                Pixel Pulses
-              </div>
+              <img 
+                src="/download.svg" 
+                alt="Pixel Pulses" 
+                className={`h-12 w-auto transition-all duration-300 ${
+                  isScrolled ? 'opacity-90' : 'opacity-100'
+                }`}
+              />
             </motion.div>
 
             {/* Desktop Navigation */}
@@ -94,7 +96,7 @@ const Header = () => {
               }`}>
                 <div className="flex items-center">
                   <Phone className="h-4 w-4 mr-1" />
-                  <span>+91 9936968762</span>
+                  <span>+91-9355096544</span>
                 </div>
                 <div className="flex items-center">
                   <Mail className="h-4 w-4 mr-1" />
@@ -154,9 +156,11 @@ const Header = () => {
           <div className="p-6">
             {/* Logo and close button */}
             <div className="flex items-center justify-between mb-8">
-              <div className="text-2xl font-bold text-gray-900">
-                Pixel Pulses
-              </div>
+              <img 
+                src="/PixelPulses.png" 
+                alt="Pixel Pulses" 
+                className="h-8 w-auto"
+              />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors duration-200"
@@ -182,7 +186,7 @@ const Header = () => {
             <div className="border-t border-gray-200 pt-6 space-y-4">
               <div className="flex items-center text-gray-600">
                 <Phone className="h-5 w-5 mr-3 text-blue-600" />
-                <span>+91 9936968762</span>
+                <span>++91-9355096544</span>
               </div>
               <div className="flex items-center text-gray-600">
                 <Mail className="h-5 w-5 mr-3 text-blue-600" />

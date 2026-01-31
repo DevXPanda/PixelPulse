@@ -64,9 +64,11 @@ const Footer = () => {
             className="space-y-6"
           >
             <div>
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Pixel Pulses
-              </h3>
+              <img 
+                src="/download.svg" 
+                alt="Pixel Pulses" 
+                className="h-15 w-auto mb-4"
+              />
               <p className="text-gray-400 leading-relaxed">
                 Your partner for digital growth. We combine cutting-edge technology 
                 with strategic marketing to deliver results that matter.
@@ -152,11 +154,11 @@ const Footer = () => {
               </div>
               <div className="flex items-center text-gray-400">
                 <Phone className="h-5 w-5 mr-3 text-blue-400" />
-                <span>+91 9936968762</span>
+                <span>+91-9355096544</span>
               </div>
               <div className="flex items-center text-gray-400">
                 <MessageCircle className="h-5 w-5 mr-3 text-green-400" />
-                <span>WhatsApp: +91 9936968762</span>
+                <span>WhatsApp: +91-9355096544</span>
               </div>
               <div className="flex items-center text-gray-400">
                 <MapPin className="h-5 w-5 mr-3 text-blue-400" />
