@@ -25,6 +25,8 @@ const Contact = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [serviceDropdownOpen, setServiceDropdownOpen] = useState(false);
+
 
   const businessTypes = [
     'E-commerce',
@@ -109,7 +111,7 @@ const Contact = () => {
         name: '',
         email: '',
         businessType: '',
-         serviceNeeded: [] as string[],
+        serviceNeeded: [] as string[],
         budgetRange: '',
         message: ''
       });
@@ -274,27 +276,61 @@ const Contact = () => {
                   </select>
                 </div>
 
-                <div>
+                <div className="relative">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Service Needed <span className='text-red-600'>*</span>
+                    Service Needed <span className="text-red-600">*</span>
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {services.map(service => (
-                      <label key={service} className="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors">
-                        <input
-                          type="checkbox"
-                          name="serviceNeeded"
-                          value={service}
-                          checked={formData.serviceNeeded.includes(service)}
-                          onChange={() => handleServiceChange(service)}
-                          className="h-4 w-4 border-gray-300 rounded accent-blue-600"
-                        />
-                        <span className="text-gray-900">{service}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
 
+                  {/* Select-like button */}
+                  <button
+                    type="button"
+                    onClick={() => setServiceDropdownOpen(prev => !prev)}
+                    className="relative w-full px-4 py-3 pr-10 text-left bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  >
+                    {formData.serviceNeeded.length > 0
+                      ? `${formData.serviceNeeded.length} service(s) selected`
+                      : "Select services"}
+
+                    <svg
+                      className={`absolute right-1 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-900 transition-transform duration-200 ${serviceDropdownOpen ? "rotate-180" : ""
+                        }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+
+                  </button>
+
+                  {/* Dropdown options */}
+                  {serviceDropdownOpen && (
+                    <div className="absolute z-20 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg p-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+                        {services.map(service => (
+                          <label
+                            key={service}
+                            className="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg border border-gray-300 hover:bg-gray-100 cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={formData.serviceNeeded.includes(service)}
+                              onChange={() => handleServiceChange(service)}
+                              className="h-4 w-4 rounded accent-blue-600"
+                            />
+                            <span className="text-gray-900">{service}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 <div>
                   <label htmlFor="budgetRange" className="block text-sm font-medium text-gray-700 mb-2">
