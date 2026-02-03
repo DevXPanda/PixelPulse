@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, TrendingUp, Users, Calendar, ShoppingCart, BarChart3 } from 'lucide-react';
+import { ExternalLink, TrendingUp, Dumbbell, Users, Calendar, ShoppingCart, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 const Portfolio = () => {
@@ -20,7 +20,7 @@ const Portfolio = () => {
       industry: "Fitness",
       work: ["Website Development", "Local SEO Optimization", "Google My Business"],
       result: "Increased walk-ins by 45%",
-      resultIcon: TrendingUp,
+      resultIcon: Dumbbell,
       color: "from-green-500 to-emerald-500"
     },
     {
@@ -29,7 +29,7 @@ const Portfolio = () => {
       work: ["Booking System", "Patient Portal", "Automated Reminders"],
       result: "Booking automation 24/7",
       resultIcon: Calendar,
-      color: "from-purple-500 to-pink-500"
+      color: "from-rose-400 to-orange-500"
     },
     {
       title: "E-commerce Store + Google Ads",
@@ -37,7 +37,7 @@ const Portfolio = () => {
       work: ["Shopify Development", "Google Shopping Ads", "Conversion Optimization"],
       result: "Sales increased by 180%",
       resultIcon: ShoppingCart,
-      color: "from-orange-500 to-red-500"
+      color: "from-orange-500 to-red-700"
     },
     {
       title: "AI Chatbot Integration",
@@ -53,7 +53,7 @@ const Portfolio = () => {
       work: ["React Dashboard", "Node.js API", "Real-time Analytics"],
       result: "Business analytics tracking",
       resultIcon: BarChart3,
-      color: "from-gray-600 to-gray-800"
+      color: "from-teal-500 to-cyan-700"
     }
   ];
 
