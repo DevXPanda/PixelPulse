@@ -424,9 +424,9 @@ const Services = () => {
               <p className="text-xl mb-8 text-blue-100">
                 Let's discuss how we can create a customized strategy for your business
               </p>
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 border-0">
+              {/* <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 border-0">
                 Schedule Free Consultation
-              </Button>
+              </Button> */}
             </div>
           </div>
         </motion.div>

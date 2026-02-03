@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   Mail, 
   Phone, 
@@ -21,7 +21,7 @@ const Contact = () => {
     name: '',
     email: '',
     businessType: '',
-    serviceNeeded: '',
+    serviceNeeded: [] as string[],
     budgetRange: '',
     message: ''
   });
@@ -72,62 +72,10 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleStrategyInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setStrategyFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleStrategySubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    try {
-      // EmailJS configuration
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'your_service_id';
-      const adminTemplateId = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID || 'template_admin_notification';
-      const clientTemplateId = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID || 'template_client_reply';
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'your_public_key';
-
-      // Prepare template parameters for strategy call
-      const templateParams = {
-        ...strategyFormData,
-        submission_type: 'Strategy Call Request',
-        submission_date: new Date().toLocaleString()
-      };
-
-      // Send email to admin
-      await emailjs.send(serviceId, adminTemplateId, templateParams, publicKey);
-      
-      // Send confirmation email to client
-      await emailjs.send(serviceId, clientTemplateId, templateParams, publicKey);
-
-      setShowSuccess(true);
-      setShowStrategyModal(false);
-      
-      // Auto-hide popup after 3 seconds
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 3000);
-      
-      // Reset strategy form
-      setStrategyFormData({
-        name: '',
-        email: '',
-        phone: '',
-        projectDetails: ''
-      });
-    } catch (error) {
-      console.error('EmailJS Error:', error);
-      alert('Sorry, there was an error sending your request. Please try again or contact us directly at pixelpulse340@gmail.com');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       // EmailJS configuration
       const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'your_service_id';
@@ -143,23 +91,21 @@ const Contact = () => {
 
       // Send email to admin
       await emailjs.send(serviceId, adminTemplateId, templateParams, publicKey);
-      
-      // Send confirmation email to client
+
       await emailjs.send(serviceId, clientTemplateId, templateParams, publicKey);
 
       setShowSuccess(true);
-      
-      // Auto-hide popup after 3 seconds
+
       setTimeout(() => {
         setShowSuccess(false);
       }, 3000);
-      
+
       // Reset form
       setFormData({
         name: '',
         email: '',
         businessType: '',
-        serviceNeeded: '',
+         serviceNeeded: [] as string[],
         budgetRange: '',
         message: ''
       });
@@ -274,7 +220,7 @@ const Contact = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      Name *
+                      Name <span className='text-red-600'>*</span>
                     </label>
                     <input
                       type="text"
@@ -283,14 +229,14 @@ const Contact = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                      className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
                       placeholder="Your full name"
                     />
                   </div>
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email *
+                      Email <span className='text-red-600'>*</span>
                     </label>
                     <input
                       type="email"
@@ -299,7 +245,7 @@ const Contact = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                      className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
                       placeholder="your@email.com"
                     />
                   </div>
@@ -307,7 +253,7 @@ const Contact = () => {
 
                 <div>
                   <label htmlFor="businessType" className="block text-sm font-medium text-gray-700 mb-2">
-                    Business Type *
+                    Business Type <span className='text-red-600'>*</span>
                   </label>
                   <select
                     id="businessType"
@@ -315,7 +261,7 @@ const Contact = () => {
                     value={formData.businessType}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
                   >
                     <option value="">Select your business type</option>
                     {businessTypes.map(type => (
@@ -325,27 +271,30 @@ const Contact = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="serviceNeeded" className="block text-sm font-medium text-gray-700 mb-2">
-                    Service Needed *
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Service Needed <span className='text-red-600'>*</span>
                   </label>
-                  <select
-                    id="serviceNeeded"
-                    name="serviceNeeded"
-                    value={formData.serviceNeeded}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
-                  >
-                    <option value="">Select a service</option>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {services.map(service => (
-                      <option key={service} value={service}>{service}</option>
+                      <label key={service} className="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors">
+                        <input
+                          type="checkbox"
+                          name="serviceNeeded"
+                          value={service}
+                          checked={formData.serviceNeeded.includes(service)}
+                          onChange={() => handleServiceChange(service)}
+                          className="h-4 w-4 border-gray-300 rounded accent-blue-600"
+                        />
+                        <span className="text-gray-900">{service}</span>
+                      </label>
                     ))}
-                  </select>
+                  </div>
                 </div>
+
 
                 <div>
                   <label htmlFor="budgetRange" className="block text-sm font-medium text-gray-700 mb-2">
-                    Budget Range *
+                    Budget Range <span className='text-red-600'>*</span>
                   </label>
                   <select
                     id="budgetRange"
@@ -353,7 +302,7 @@ const Contact = () => {
                     value={formData.budgetRange}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
                   >
                     <option value="">Select your budget range</option>
                     {budgetRanges.map(range => (
@@ -372,7 +321,7 @@ const Contact = () => {
                     value={formData.message}
                     onChange={handleInputChange}
                     rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
                     placeholder="Tell me more about your project..."
                   />
                 </div>

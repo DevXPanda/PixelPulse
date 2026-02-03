@@ -1,18 +1,19 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Briefcase, 
-  Target, 
-  Globe, 
+import { motion, AnimatePresence, } from 'framer-motion';
+import {
+  Briefcase,
+  Target,
+  Globe,
   Building,
   TrendingUp,
   X,
   Check,
   Star,
   Clock,
-  Gift
+  Gift,
+  BadgePercent
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
@@ -238,7 +239,7 @@ const Stats = () => {
               Growing 40% year-over-year
             </span>
           </div>
-          
+
           {/* See Offer Button */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -285,9 +286,15 @@ const Stats = () => {
               <div className="sticky top-0 bg-white border-b border-gray-200 p-6 rounded-t-3xl z-10">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-3xl font-bold text-gray-900 mb-2">
-                      🎉 Special Offers & Packages
-                    </h3>
+                    {/* <h3 className="text-3xl font-bold text-gray-900 mb-2">
+                      <BadgePercent/> Special Offers & Packages
+                    </h3> */}
+                    <div className="flex items-center gap-6">
+                      <h3 className="text-3xl font-bold text-gray-900">
+                        <BadgePercent className="inline mr-2" /> Special Offers & Packages
+                      </h3>
+                    </div>
+
                     <p className="text-gray-600">
                       Limited time deals designed to accelerate your business growth
                     </p>
@@ -310,11 +317,10 @@ const Stats = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className={`relative rounded-2xl border-2 ${
-                        offer.popular
+                      className={`relative rounded-2xl border-2 ${offer.popular
                           ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50'
                           : 'border-gray-200 bg-white'
-                      } p-6 hover:shadow-lg transition-all duration-300`}
+                        } p-6 hover:shadow-lg transition-all duration-300`}
                     >
                       {/* Popular Badge */}
                       {offer.popular && (
@@ -363,11 +369,10 @@ const Stats = () => {
                       {/* CTA Button */}
                       <Button
                         size="lg"
-                        className={`w-full ${
-                          offer.popular
+                        className={`w-full ${offer.popular
                             ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
                             : 'bg-gray-900 hover:bg-gray-800'
-                        } text-white`}
+                          } text-white`}
                       >
                         Get This Deal
                       </Button>
