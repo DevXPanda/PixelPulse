@@ -72,6 +72,67 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleServiceChange = (service: string) => {
+    setFormData(prev => ({
+      ...prev,
+      serviceNeeded: prev.serviceNeeded.includes(service)
+        ? prev.serviceNeeded.filter(s => s !== service)
+        : [...prev.serviceNeeded, service]
+    }));
+  };
+
+  const handleStrategyInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setStrategyFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleStrategySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      // EmailJS configuration
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'your_service_id';
+      const adminTemplateId = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID || 'template_admin_notification';
+      const clientTemplateId = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID || 'template_client_reply';
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'your_public_key';
+
+      // Prepare template parameters for strategy call
+      const templateParams = {
+        ...strategyFormData,
+        submission_type: 'Strategy Call Request',
+        submission_date: new Date().toLocaleString()
+      };
+
+      // Send email to admin
+      await emailjs.send(serviceId, adminTemplateId, templateParams, publicKey);
+      
+      // Send confirmation email to client
+      await emailjs.send(serviceId, clientTemplateId, templateParams, publicKey);
+
+      setShowSuccess(true);
+      setShowStrategyModal(false);
+      
+      // Auto-hide popup after 3 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
+      
+      // Reset strategy form
+      setStrategyFormData({
+        name: '',
+        email: '',
+        phone: '',
+        projectDetails: ''
+      });
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      alert('Sorry, there was an error sending your request. Please try again or contact us directly at pixelpulse340@gmail.com');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -105,7 +166,7 @@ const Contact = () => {
         name: '',
         email: '',
         businessType: '',
-         serviceNeeded: [] as string[],
+        serviceNeeded: [],
         budgetRange: '',
         message: ''
       });
