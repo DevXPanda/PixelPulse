@@ -103,7 +103,7 @@ const Header = () => {
                   <span>pixelpulse340@gmail.com</span>
                 </div>
               </div>
-              {/* <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+              {/* <Button size="sm" className="bg-blue-600 hover:bg-blue-700" onClick={() => setShowStrategyModal(true)}>
                 Free Strategy Call
               </Button> */}
             </motion.div>
@@ -192,7 +192,7 @@ const Header = () => {
                 <Mail className="h-5 w-5 mr-3 text-blue-600" />
                 <span>pixelpulse340@gmail.com</span>
               </div>
-              {/* <Button className="w-full mt-6">
+              {/* <Button className="w-full mt-6" onClick={() => setShowStrategyModal(true)}>
                 Free Strategy Call
               </Button> */}
             </div>
