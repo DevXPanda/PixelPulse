@@ -66,7 +66,14 @@ const FinalCTA = () => {
             transition={{ duration: 0.8, delay: 0.7 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
           >
-          
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 border-0 group">
+              Book Free Consultation
+              <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+            </Button>
+            <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10">
+              <Calendar className="mr-2 h-5 w-5" />
+              Schedule Call
+            </Button>
           </motion.div>
 
           {/* Trust indicators */}

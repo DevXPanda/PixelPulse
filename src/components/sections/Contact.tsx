@@ -1,14 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import {
-  Mail,
-  Phone,
-  MessageCircle,
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Mail, 
+  Phone, 
+  MessageCircle, 
   Send,
   MapPin,
-  Clock
+  Clock,
+  X,
+  User,
+  MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import emailjs from '@emailjs/browser';
@@ -25,7 +28,8 @@ const Contact = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [serviceDropdownOpen, setServiceDropdownOpen] = useState(false);
+  const [serviceDropdownOpen, setServiceDropdownOpen ] = useState(false);
+  const [showStrategyModal, setShowStrategyModal] = useState();
 
 
   const businessTypes = [
@@ -65,18 +69,65 @@ const Contact = () => {
   };
 
   const handleServiceChange = (service: string) => {
-    setFormData(prev => {
-      const currentServices = prev.serviceNeeded;
-      if (currentServices.includes(service)) {
-        // remove if already selected
-        return { ...prev, serviceNeeded: currentServices.filter(s => s !== service) };
-      } else {
-        // add if not selected
-        return { ...prev, serviceNeeded: [...currentServices, service] };
-      }
-    });
+    setFormData(prev => ({
+      ...prev,
+      serviceNeeded: prev.serviceNeeded.includes(service)
+        ? prev.serviceNeeded.filter(s => s !== service)
+        : [...prev.serviceNeeded, service]
+    }));
   };
 
+  const handleStrategyInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setStrategyFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleStrategySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      // EmailJS configuration
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'your_service_id';
+      const adminTemplateId = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID || 'template_admin_notification';
+      const clientTemplateId = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID || 'template_client_reply';
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'your_public_key';
+
+      // Prepare template parameters for strategy call
+      const templateParams = {
+        ...strategyFormData,
+        submission_type: 'Strategy Call Request',
+        submission_date: new Date().toLocaleString()
+      };
+
+      // Send email to admin
+      await emailjs.send(serviceId, adminTemplateId, templateParams, publicKey);
+      
+      // Send confirmation email to client
+      await emailjs.send(serviceId, clientTemplateId, templateParams, publicKey);
+
+      setShowSuccess(true);
+      setShowStrategyModal(false);
+      
+      // Auto-hide popup after 3 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
+      
+      // Reset strategy form
+      setStrategyFormData({
+        name: '',
+        email: '',
+        phone: '',
+        projectDetails: ''
+      });
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      alert('Sorry, there was an error sending your request. Please try again or contact us directly at pixelpulse340@gmail.com');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,7 +162,7 @@ const Contact = () => {
         name: '',
         email: '',
         businessType: '',
-        serviceNeeded: [] as string[],
+         serviceNeeded: [] as string[],
         budgetRange: '',
         message: ''
       });
@@ -418,6 +469,137 @@ const Contact = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Strategy Call Modal */}
+      <AnimatePresence>
+        {showStrategyModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowStrategyModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="sticky top-0 bg-white border-b border-gray-200 p-6 rounded-t-2xl">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900">Get Free Strategy Call</h3>
+                    <p className="text-gray-600 mt-1">Let's discuss your project requirements</p>
+                  </div>
+                  <button
+                    onClick={() => setShowStrategyModal(false)}
+                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <X className="h-5 w-5 text-gray-500" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Form Content */}
+              <form onSubmit={handleStrategySubmit} className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <User className="h-4 w-4 inline mr-2" />
+                    Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={strategyFormData.name}
+                    onChange={handleStrategyInputChange}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    placeholder="Your full name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <Mail className="h-4 w-4 inline mr-2" />
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={strategyFormData.email}
+                    onChange={handleStrategyInputChange}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    placeholder="your@email.com"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <Phone className="h-4 w-4 inline mr-2" />
+                    Phone *
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={strategyFormData.phone}
+                    onChange={handleStrategyInputChange}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    placeholder="Your phone number"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <MessageSquare className="h-4 w-4 inline mr-2" />
+                    Project Details
+                  </label>
+                  <textarea
+                    name="projectDetails"
+                    value={strategyFormData.projectDetails}
+                    onChange={handleStrategyInputChange}
+                    rows={4}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    placeholder="Tell us about your project..."
+                  />
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="flex-1"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                        Sending...
+                      </>
+                    ) : (
+                      'Submit Request'
+                    )}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="lg"
+                    className="flex-1"
+                    onClick={() => setShowStrategyModal(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

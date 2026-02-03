@@ -4,9 +4,18 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Briefcase, ChartBar, Code, X, Mail, Phone, User, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import emailjs from '@emailjs/browser';
 
 const Hero = () => {
   const [showContactForm, setShowContactForm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [strategyFormData, setStrategyFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    projectDetails: ''
+  });
 
   const scrollToPortfolio = () => {
     const portfolioSection = document.getElementById('portfolio');
@@ -15,11 +24,56 @@ const Hero = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleStrategyInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setStrategyFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted');
-    setShowContactForm(false);
+    setIsSubmitting(true);
+
+    try {
+      // EmailJS configuration
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'your_service_id';
+      const adminTemplateId = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID || 'template_admin_notification';
+      const clientTemplateId = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID || 'template_client_reply';
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'your_public_key';
+
+      // Prepare template parameters for strategy call
+      const templateParams = {
+        ...strategyFormData,
+        submission_type: 'Strategy Call Request',
+        submission_date: new Date().toLocaleString()
+      };
+
+      // Send email to admin
+      await emailjs.send(serviceId, adminTemplateId, templateParams, publicKey);
+
+      // Send confirmation email to client
+      await emailjs.send(serviceId, clientTemplateId, templateParams, publicKey);
+
+      setShowSuccess(true);
+
+      // Close modal after showing success popup
+      setTimeout(() => {
+        setShowContactForm(false);
+        setShowSuccess(false);
+      }, 3000);
+
+      // Reset strategy form
+      setStrategyFormData({
+        name: '',
+        email: '',
+        phone: '',
+        projectDetails: ''
+      });
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      alert('Sorry, there was an error sending your request. Please try again or contact us directly at pixelpulse340@gmail.com');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   return (
     <section className="relative min-h-[90vh] sm:min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-24 sm:pt-28 md:pt-32 lg:pt-0">
@@ -147,7 +201,7 @@ const Hero = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-full max-h-[90vh] overflow-y-auto scrollbar-none"
+              className="bg-white rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-full max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
@@ -167,88 +221,121 @@ const Hero = () => {
               </div>
 
               {/* Form Content */}
-              <form onSubmit={handleSubmit} className="p-6 space-y-4">
+              <form onSubmit={handleSubmit} className="p-6 space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <User className="h-4 w-4 inline mr-2" />
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    <User className="h-4 w-4 inline mr-2 text-blue-600" />
                     Name <span className='text-red-600'>*</span>
                   </label>
                   <input
                     type="text"
+                    name="name"
+                    value={strategyFormData.name}
+                    onChange={handleStrategyInputChange}
                     required
-                    className="w-full px-4 py-2 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-900 bg-gray-50 hover:bg-white"
                     placeholder="Your full name"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Mail className="h-4 w-4 inline mr-2" />
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    <Mail className="h-4 w-4 inline mr-2 text-blue-600" />
                     Email <span className='text-red-600'>*</span>
                   </label>
                   <input
                     type="email"
+                    name="email"
+                    value={strategyFormData.email}
+                    onChange={handleStrategyInputChange}
                     required
-                    className="w-full px-4 py-2 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-900 bg-gray-50 hover:bg-white"
                     placeholder="your@email.com"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Phone className="h-4 w-4 inline mr-2" />
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    <Phone className="h-4 w-4 inline mr-2 text-blue-600" />
                     Phone <span className='text-red-600'>*</span>
                   </label>
                   <input
                     type="tel"
+                    name="phone"
+                    value={strategyFormData.phone}
+                    onChange={handleStrategyInputChange}
                     required
-                    className="w-full px-4 py-2 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-900 bg-gray-50 hover:bg-white"
                     placeholder="Your phone number"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <MessageSquare className="h-4 w-4 inline mr-2" />
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    <MessageSquare className="h-4 w-4 inline mr-2 text-blue-600" />
                     Project Details
                   </label>
                   <textarea
+                    name="projectDetails"
+                    value={strategyFormData.projectDetails}
+                    onChange={handleStrategyInputChange}
                     rows={4}
-                    className="w-full px-4 py-2 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-900 bg-gray-50 hover:bg-white resize-none"
                     placeholder="Tell us about your project..."
                   />
                 </div>
 
-                <div className="flex gap-4 pt-6">
+                <div className="flex gap-3">
                   <Button
                     type="submit"
                     size="lg"
-                    className="flex-1 py-0 my-0 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white
-               shadow-md hover:shadow-lg hover:from-indigo-500 hover:to-indigo-600
-               transition-all duration-200 ease-out
-               active:scale-[0.98]
-               focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                    disabled={isSubmitting}
                   >
-                    Submit Request
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                        Sending...
+                      </>
+                    ) : (
+                      'Submit Request'
+                    )}
                   </Button>
-
                   <Button
                     type="button"
                     variant="outline"
                     size="lg"
-                    className="flex-1 py-0 my-0 border-gray-300 text-gray-700
-               hover:bg-gray-50 hover:border-gray-400
-               transition-all duration-200 ease-out
-               active:scale-[0.98]
-               focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
+                    className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 font-semibold transition-all duration-200"
                     onClick={() => setShowContactForm(false)}
                   >
                     Cancel
                   </Button>
                 </div>
 
-
               </form>
+
+              {/* Success Popup */}
+              {showSuccess && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-4 border border-gray-200 max-w-sm pointer-events-none"
+                >
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                      <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-900">Message Sent! 🎉</h4>
+                      <p className="text-xs text-gray-600">We'll get back to you within 24 hours.</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           </motion.div>
         )}

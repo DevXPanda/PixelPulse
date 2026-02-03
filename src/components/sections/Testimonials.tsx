@@ -7,37 +7,37 @@ import { Star, Quote } from 'lucide-react';
 const Testimonials = () => {
   const testimonials = [
     {
-      name: "Sarah Johnson",
+      name: "Vihaan Mehta",
       content: "Working with Pixel Pulses transformed our online presence. Our conversion rates increased by 180% within just 3 months. The combination of technical expertise and marketing insight is unmatched.",
       rating: 5,
       industry: "Technology"
     },
     {
-      name: "Michael Chen",
+      name: "Dev Singh",
       content: "The new website and local SEO strategy brought in 45% more walk-ins in the first month. The team understood our business needs and delivered results that exceeded expectations.",
       rating: 5,
       industry: "Fitness"
     },
     {
-      name: "Emily Rodriguez",
+      name: "Arjun Bansal",
       content: "Our Meta Ads campaign generated 120+ qualified leads in just 30 days. The ROI-focused approach and continuous optimization made all the difference for our business.",
       rating: 5,
       industry: "Real Estate"
     },
     {
-      name: "David Kim",
+      name: "Dr. Sanjay Bhattacharya",
       content: "The custom booking system and AI chatbot reduced our administrative workload by 60%. Our customers love the convenience, and our staff can focus on what matters most.",
       rating: 5,
       industry: "Hospitality"
     },
     {
-      name: "Lisa Thompson",
+      name: "Rahul Choudhary",
       content: "Our Google Shopping campaigns and website optimization led to a 180% increase in online sales. The data-driven approach and attention to detail is impressive.",
       rating: 5,
       industry: "Retail"
     },
     {
-      name: "James Wilson",
+      name: "Krish Kapoor",
       content: "The MERN dashboard and analytics system provided us with real-time insights that transformed our decision-making process. A true game-changer for our operations.",
       rating: 5,
       industry: "SaaS"
