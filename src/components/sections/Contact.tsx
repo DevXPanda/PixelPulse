@@ -14,7 +14,8 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import emailjs from '@emailjs/browser';
+// import emailjs from '@emailjs/browser';
+
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -29,7 +30,7 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [serviceDropdownOpen, setServiceDropdownOpen] = useState(false);
-  const [showStrategyModal, setShowStrategyModal] = useState();
+  const [showStrategyModal, setShowStrategyModal] = useState<boolean>(false);
 
   const [strategyFormData, setStrategyFormData] = useState({
     name: '',
@@ -94,11 +95,12 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
+      const emailjs = (await import('@emailjs/browser')).default;
       // EmailJS configuration
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'your_service_id';
-      const adminTemplateId = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID || 'template_admin_notification';
-      const clientTemplateId = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID || 'template_client_reply';
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'your_public_key';
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
+      const adminTemplateId = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID! ;
+      const clientTemplateId = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID! ;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY! ;
 
       // Prepare template parameters for strategy call
       const templateParams = {
@@ -141,11 +143,12 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
+      const emailjs = (await import('@emailjs/browser')).default;
       // EmailJS configuration
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'your_service_id';
-      const adminTemplateId = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID || 'template_admin_notification';
-      const clientTemplateId = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID || 'template_client_reply';
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'your_public_key';
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID! ;
+      const adminTemplateId = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID! ;
+      const clientTemplateId = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID! ;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY! ;
 
       // Prepare template parameters
       const templateParams = {
@@ -603,6 +606,7 @@ const Contact = () => {
                   </Button>
                 </div>
               </form>
+
             </motion.div>
           </motion.div>
         )}
