@@ -35,13 +35,25 @@ const Footer = () => {
     'AI Solutions'
   ];
 
-  const socialLinks = [
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Github, href: '#', label: 'GitHub' }
-  ];
+const socialLinks = [
+  {
+    icon: Facebook,
+    href: 'https://www.facebook.com/profile.php?id=61587403854876',
+    label: 'Facebook'
+  },
+  {
+    icon: Instagram,
+    href: 'https://www.instagram.com/pixelpulses_19/',
+    label: 'Instagram'
+  },
+  {
+    icon: Linkedin,
+    href: 'https://www.linkedin.com/in/pixelpulses', 
+    label: 'LinkedIn'
+  },
+
+];
+
 
   const handleScrollToSection = (href: string) => {
     const element = document.querySelector(href);
