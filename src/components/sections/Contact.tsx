@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Mail, 
-  Phone, 
-  MessageCircle, 
+import {
+  Mail,
+  Phone,
+  MessageCircle,
   Send,
   MapPin,
   Clock,
@@ -28,8 +28,15 @@ const Contact = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [serviceDropdownOpen, setServiceDropdownOpen ] = useState(false);
+  const [serviceDropdownOpen, setServiceDropdownOpen] = useState(false);
   const [showStrategyModal, setShowStrategyModal] = useState();
+
+  const [strategyFormData, setStrategyFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    projectDetails: ''
+  });
 
 
   const businessTypes = [
@@ -85,7 +92,7 @@ const Contact = () => {
   const handleStrategySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       // EmailJS configuration
       const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'your_service_id';
@@ -102,18 +109,18 @@ const Contact = () => {
 
       // Send email to admin
       await emailjs.send(serviceId, adminTemplateId, templateParams, publicKey);
-      
+
       // Send confirmation email to client
       await emailjs.send(serviceId, clientTemplateId, templateParams, publicKey);
 
       setShowSuccess(true);
       setShowStrategyModal(false);
-      
+
       // Auto-hide popup after 3 seconds
       setTimeout(() => {
         setShowSuccess(false);
       }, 3000);
-      
+
       // Reset strategy form
       setStrategyFormData({
         name: '',
@@ -162,7 +169,7 @@ const Contact = () => {
         name: '',
         email: '',
         businessType: '',
-         serviceNeeded: [] as string[],
+        serviceNeeded: [] as string[],
         budgetRange: '',
         message: ''
       });
