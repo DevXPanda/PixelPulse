@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Mail, 
-  Phone, 
-  MessageCircle, 
+import {
+  Mail,
+  Phone,
+  MessageCircle,
   MapPin,
   Facebook,
   Instagram,
@@ -35,25 +35,23 @@ const Footer = () => {
     'AI Solutions'
   ];
 
-const socialLinks = [
-  {
-    icon: Facebook,
-    href: 'https://www.facebook.com/profile.php?id=61587403854876',
-    label: 'Facebook'
-  },
-  {
-    icon: Instagram,
-    href: 'https://www.instagram.com/pixelpulses_19/',
-    label: 'Instagram'
-  },
-  {
-    icon: Linkedin,
-    href: 'https://www.linkedin.com/in/pixelpulses', 
-    label: 'LinkedIn'
-  },
-
-];
-
+  const socialLinks = [
+    {
+      icon: Facebook,
+      href: 'https://www.facebook.com/profile.php?id=61587403854876',
+      label: 'Facebook'
+    },
+    {
+      icon: Instagram,
+      href: 'https://www.instagram.com/pixelpulses_19/',
+      label: 'Instagram'
+    },
+    {
+      icon: Linkedin,
+      href: 'https://www.linkedin.com/in/pixelpulses/',
+      label: 'LinkedIn'
+    }
+  ];
 
   const handleScrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -76,13 +74,13 @@ const socialLinks = [
             className="space-y-6"
           >
             <div>
-              <img 
-                src="/download.svg" 
-                alt="Pixel Pulses" 
+              <img
+                src="/download.svg"
+                alt="Pixel Pulses"
                 className="h-15 w-auto mb-4"
               />
               <p className="text-gray-400 leading-relaxed">
-                Your partner for digital growth. We combine cutting-edge technology 
+                Your partner for digital growth. We combine cutting-edge technology
                 with strategic marketing to deliver results that matter.
               </p>
             </div>
@@ -93,6 +91,8 @@ const socialLinks = [
                 <a
                   key={index}
                   href={social.href}
+                  target={social.href.startsWith('http') ? '_blank' : undefined}
+                  rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                   aria-label={social.label}
                   className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors duration-200"
                 >
@@ -158,7 +158,7 @@ const socialLinks = [
             <h4 className="text-lg font-semibold text-white">
               Get in Touch
             </h4>
-            
+
             <div className="space-y-4">
               <div className="flex items-center text-gray-400">
                 <Mail className="h-5 w-5 mr-3 text-blue-400" />
@@ -198,7 +198,7 @@ const socialLinks = [
             <div className="text-gray-400 text-sm">
               © {currentYear} Pixel Pulses. All rights reserved.
             </div>
-            
+
             <div className="flex space-x-6 text-sm">
               <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
                 Privacy Policy

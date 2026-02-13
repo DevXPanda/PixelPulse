@@ -14,23 +14,21 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-// import emailjs from '@emailjs/browser';
-
 
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     businessType: '',
-    serviceNeeded: [] as string[],
+    serviceNeeded: '',
     budgetRange: '',
     message: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [serviceDropdownOpen, setServiceDropdownOpen] = useState(false);
-  const [showStrategyModal, setShowStrategyModal] = useState<boolean>(false);
+  const [showStrategyModal, setShowStrategyModal] = useState(false);
 
   const [strategyFormData, setStrategyFormData] = useState({
     name: '',
@@ -52,6 +50,7 @@ const Contact = () => {
   ];
 
   const services = [
+    'All service',
     'Performance Marketing',
     'Social Media Management',
     'SEO Services',
@@ -76,15 +75,6 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleServiceChange = (service: string) => {
-    setFormData(prev => ({
-      ...prev,
-      serviceNeeded: prev.serviceNeeded.includes(service)
-        ? prev.serviceNeeded.filter(s => s !== service)
-        : [...prev.serviceNeeded, service]
-    }));
-  };
-
   const handleStrategyInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setStrategyFormData(prev => ({ ...prev, [name]: value }));
@@ -93,45 +83,19 @@ const Contact = () => {
   const handleStrategySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
-      const emailjs = (await import('@emailjs/browser')).default;
-      // EmailJS configuration
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
-      const adminTemplateId = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID! ;
-      const clientTemplateId = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID! ;
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY! ;
-
-      // Prepare template parameters for strategy call
-      const templateParams = {
-        ...strategyFormData,
-        submission_type: 'Strategy Call Request',
-        submission_date: new Date().toLocaleString()
-      };
-
-      // Send email to admin
-      await emailjs.send(serviceId, adminTemplateId, templateParams, publicKey);
-
-      // Send confirmation email to client
-      await emailjs.send(serviceId, clientTemplateId, templateParams, publicKey);
-
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'strategy', data: strategyFormData }),
+      });
+      const result = await res.json();
+      if (!res.ok || !result.success) throw new Error(result.error || 'Failed to send');
       setShowSuccess(true);
       setShowStrategyModal(false);
-
-      // Auto-hide popup after 3 seconds
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 3000);
-
-      // Reset strategy form
-      setStrategyFormData({
-        name: '',
-        email: '',
-        phone: '',
-        projectDetails: ''
-      });
-    } catch (error) {
-      console.error('EmailJS Error:', error);
+      setTimeout(() => setShowSuccess(false), 3000);
+      setStrategyFormData({ name: '', email: '', phone: '', projectDetails: '' });
+    } catch {
       alert('Sorry, there was an error sending your request. Please try again or contact us directly at pixelpulse340@gmail.com');
     } finally {
       setIsSubmitting(false);
@@ -141,43 +105,26 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
-      const emailjs = (await import('@emailjs/browser')).default;
-      // EmailJS configuration
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID! ;
-      const adminTemplateId = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID! ;
-      const clientTemplateId = process.env.NEXT_PUBLIC_EMAILJS_CLIENT_TEMPLATE_ID! ;
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY! ;
-
-      // Prepare template parameters
-      const templateParams = {
-        ...formData,
-        submission_date: new Date().toLocaleString()
-      };
-
-      // Send email to admin
-      await emailjs.send(serviceId, adminTemplateId, templateParams, publicKey);
-
-      await emailjs.send(serviceId, clientTemplateId, templateParams, publicKey);
-
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'contact', data: formData }),
+      });
+      const result = await res.json();
+      if (!res.ok || !result.success) throw new Error(result.error || 'Failed to send');
       setShowSuccess(true);
-
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 3000);
-
-      // Reset form
+      setTimeout(() => setShowSuccess(false), 3000);
       setFormData({
         name: '',
         email: '',
+        phone: '',
         businessType: '',
-        serviceNeeded: [] as string[],
+        serviceNeeded: '',
         budgetRange: '',
         message: ''
       });
-    } catch (error) {
-      console.error('EmailJS Error:', error);
+    } catch {
       alert('Sorry, there was an error sending your message. Please try again or contact us directly at pixelpulse340@gmail.com');
     } finally {
       setIsSubmitting(false);
@@ -300,22 +247,36 @@ const Contact = () => {
                       placeholder="Your full name"
                     />
                   </div>
-
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email <span className='text-red-600'>*</span>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone number
                     </label>
                     <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
                       onChange={handleInputChange}
-                      required
                       className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
-                      placeholder="your@email.com"
+                      placeholder="Your phone number"
                     />
                   </div>
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email <span className='text-red-600'>*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                    placeholder="your@email.com"
+                  />
                 </div>
 
                 <div>
@@ -337,62 +298,24 @@ const Contact = () => {
                   </select>
                 </div>
 
-                <div className="relative">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Service Needed <span className="text-red-600">*</span>
+                <div>
+                  <label htmlFor="serviceNeeded" className="block text-sm font-medium text-gray-700 mb-2">
+                    Service Needed <span className='text-red-600'>*</span>
                   </label>
-
-                  {/* Select-like button */}
-                  <button
-                    type="button"
-                    onClick={() => setServiceDropdownOpen(prev => !prev)}
-                    className="relative w-full px-4 py-3 pr-10 text-left bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  <select
+                    id="serviceNeeded"
+                    name="serviceNeeded"
+                    value={formData.serviceNeeded}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
                   >
-                    {formData.serviceNeeded.length > 0
-                      ? `${formData.serviceNeeded.length} service(s) selected`
-                      : "Select services"}
-
-                    <svg
-                      className={`absolute right-1 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-900 transition-transform duration-200 ${serviceDropdownOpen ? "rotate-180" : ""
-                        }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-
-                  </button>
-
-                  {/* Dropdown options */}
-                  {serviceDropdownOpen && (
-                    <div className="absolute z-20 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg p-3">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-64 overflow-y-auto">
-                        {services.map(service => (
-                          <label
-                            key={service}
-                            className="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg border border-gray-300 hover:bg-gray-100 cursor-pointer"
-                          >
-                            <input
-                              type="checkbox"
-                              checked={formData.serviceNeeded.includes(service)}
-                              onChange={() => handleServiceChange(service)}
-                              className="h-4 w-4 rounded accent-blue-600"
-                            />
-                            <span className="text-gray-900">{service}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                    <option value="">Select a service</option>
+                    {services.map(service => (
+                      <option key={service} value={service}>{service}</option>
+                    ))}
+                  </select>
                 </div>
-
                 <div>
                   <label htmlFor="budgetRange" className="block text-sm font-medium text-gray-700 mb-2">
                     Budget Range <span className='text-red-600'>*</span>
