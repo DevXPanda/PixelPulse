@@ -104,9 +104,9 @@ export const metadata: Metadata = {
   authors: [{ name: "Pixel Pulses" }],
 
   icons: {
-    icon: "/download.svg",
-    shortcut: "/download.svg",
-    apple: "/download.svg",
+    icon: "/PixelPulses.png",
+    shortcut: "/PixelPulses.png",
+    apple: "/PixelPulses.png",
   },
 
   openGraph: {

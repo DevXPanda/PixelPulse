@@ -5,9 +5,9 @@ import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
 
 const FloatingWhatsAppButton = () => {
-  const whatsappNumber = "+919355096544"; // Replace with your actual WhatsApp number
+  const whatsappNumber = "+919711265747"; // Replace with your actual WhatsApp number
   const whatsappMessage = "Hi! I'm interested in your services. Can we discuss my project?";
-  
+
   const whatsappLink = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
@@ -27,7 +27,7 @@ const FloatingWhatsAppButton = () => {
         aria-label="Chat on WhatsApp"
       >
         <MessageCircle className="w-6 h-6" />
-        
+
         {/* Tooltip */}
         <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none">
           Chat on WhatsApp
