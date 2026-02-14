@@ -16,6 +16,7 @@ import {
 import { Button } from '@/components/ui/Button';
 
 const Contact = () => {
+  // Main contact form state
   const [formData, setFormData] = useState<{
     name: string;
     email: string;
@@ -34,30 +35,21 @@ const Contact = () => {
     message: ''
   });
 
-
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showStrategyModal, setShowStrategyModal] = useState(false);
-
+  // Strategy call modal form state
   const [strategyFormData, setStrategyFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    projectDetails: ''
+    projectDetails: '',
+    serviceNeeded: [] as string[],
   });
 
-  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
-
-const handleServiceToggle = (service: string) => {
-  setFormData(prev => {
-    const exists = prev.serviceNeeded.includes(service);
-    const updated = exists
-      ? prev.serviceNeeded.filter(s => s !== service)
-      : [...prev.serviceNeeded, service];
-    return { ...prev, serviceNeeded: updated };
-  });
-};
+  // UI states
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showStrategyModal, setShowStrategyModal] = useState(false);
+  const [isContactServiceDropdownOpen, setIsContactServiceDropdownOpen] = useState(false);
+  const [isStrategyServiceDropdownOpen, setIsStrategyServiceDropdownOpen] = useState(false);
 
   const businessTypes = [
     'E-commerce',
@@ -71,7 +63,6 @@ const handleServiceToggle = (service: string) => {
   ];
 
   const services = [
-    'All service',
     'Performance Marketing',
     'Social Media Management',
     'SEO Services',
@@ -91,50 +82,41 @@ const handleServiceToggle = (service: string) => {
     'Discuss in consultation'
   ];
 
-  const handleInputChangeMulti = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, selectedOptions } = e.target;
-
-    const values = Array.from(selectedOptions, option => option.value);
-
-    setFormData(prev => ({
-      ...prev,
-      [name]: values,
-    }));
-  };
-
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  // Handle input changes
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleStrategyInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleStrategyInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setStrategyFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleStrategySubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'strategy', data: strategyFormData }),
+  // Toggle services
+  const toggleService = (service: string, strategy = false) => {
+    if (strategy) {
+      setStrategyFormData(prev => {
+        const updated = prev.serviceNeeded.includes(service)
+          ? prev.serviceNeeded.filter(s => s !== service)
+          : [...prev.serviceNeeded, service];
+        return { ...prev, serviceNeeded: updated };
       });
-      const result = await res.json();
-      if (!res.ok || !result.success) throw new Error(result.error || 'Failed to send');
-      setShowSuccess(true);
-      setShowStrategyModal(false);
-      setTimeout(() => setShowSuccess(false), 3000);
-      setStrategyFormData({ name: '', email: '', phone: '', projectDetails: '' });
-    } catch {
-      alert('Sorry, there was an error sending your request. Please try again or contact us directly at pixelpulse340@gmail.com');
-    } finally {
-      setIsSubmitting(false);
+    } else {
+      setFormData(prev => {
+        const updated = prev.serviceNeeded.includes(service)
+          ? prev.serviceNeeded.filter(s => s !== service)
+          : [...prev.serviceNeeded, service];
+        return { ...prev, serviceNeeded: updated };
+      });
     }
   };
 
+  // Submit main contact form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -153,12 +135,35 @@ const handleServiceToggle = (service: string) => {
         email: '',
         phone: '',
         businessType: '',
-        serviceNeeded: '',
+        serviceNeeded: [],
         budgetRange: '',
         message: ''
       });
     } catch {
-      alert('Sorry, there was an error sending your message. Please try again or contact us directly at pixelpulse340@gmail.com');
+      alert('Error sending message. Contact: pixelpulse340@gmail.com');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Submit strategy modal form
+  const handleStrategySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'strategy', data: strategyFormData }),
+      });
+      const result = await res.json();
+      if (!res.ok || !result.success) throw new Error(result.error || 'Failed to send');
+      setShowSuccess(true);
+      setShowStrategyModal(false);
+      setTimeout(() => setShowSuccess(false), 3000);
+      setStrategyFormData({ name: '', email: '', phone: '', projectDetails: '', serviceNeeded: [] });
+    } catch {
+      alert('Error sending request. Contact: pixelpulse340@gmail.com');
     } finally {
       setIsSubmitting(false);
     }
@@ -184,7 +189,7 @@ const handleServiceToggle = (service: string) => {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Contact Information */}
+          {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -199,7 +204,6 @@ const handleServiceToggle = (service: string) => {
               </p>
             </div>
 
-            {/* Contact Methods */}
             <div className="space-y-4">
               <div className="flex items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
                 <Mail className="h-5 w-5 text-blue-600 mr-4" />
@@ -208,7 +212,6 @@ const handleServiceToggle = (service: string) => {
                   <div className="text-gray-600">pixelpulse340@gmail.com</div>
                 </div>
               </div>
-
               <div className="flex items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
                 <Phone className="h-5 w-5 text-blue-600 mr-4" />
                 <div>
@@ -216,7 +219,6 @@ const handleServiceToggle = (service: string) => {
                   <div className="text-gray-600">+91-9355096544</div>
                 </div>
               </div>
-
               <div className="flex items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
                 <MessageCircle className="h-5 w-5 text-green-600 mr-4" />
                 <div>
@@ -224,7 +226,6 @@ const handleServiceToggle = (service: string) => {
                   <div className="text-gray-600">+91-9355096544</div>
                 </div>
               </div>
-
               <div className="flex items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
                 <MapPin className="h-5 w-5 text-blue-600 mr-4" />
                 <div>
@@ -234,7 +235,6 @@ const handleServiceToggle = (service: string) => {
               </div>
             </div>
 
-            {/* Business Hours */}
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200">
               <div className="flex items-center mb-3">
                 <Clock className="h-5 w-5 text-blue-600 mr-3" />
@@ -246,9 +246,6 @@ const handleServiceToggle = (service: string) => {
                 <div>Sunday: Closed</div>
               </div>
             </div>
-
-            {/* WhatsApp CTA */}
-
           </motion.div>
 
           {/* Contact Form */}
@@ -261,10 +258,11 @@ const handleServiceToggle = (service: string) => {
           >
             <div className="relative bg-gray-50 rounded-2xl p-8 border border-gray-200">
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Name & Phone */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      Name <span className='text-red-600'>*</span>
+                      Name <span className="text-red-600">*</span>
                     </label>
                     <input
                       type="text"
@@ -273,12 +271,12 @@ const handleServiceToggle = (service: string) => {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                      className="w-full px-4 outline-none py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     />
                   </div>
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone number
+                      Phone
                     </label>
                     <input
                       type="tel"
@@ -286,14 +284,15 @@ const handleServiceToggle = (service: string) => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                      className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     />
                   </div>
                 </div>
 
+                {/* Email */}
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email <span className='text-red-600'>*</span>
+                    Email <span className="text-red-600">*</span>
                   </label>
                   <input
                     type="email"
@@ -302,13 +301,14 @@ const handleServiceToggle = (service: string) => {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   />
                 </div>
 
+                {/* Business Type */}
                 <div>
                   <label htmlFor="businessType" className="block text-sm font-medium text-gray-700 mb-2">
-                    Business Type <span className='text-red-600'>*</span>
+                    Business Type <span className="text-red-600">*</span>
                   </label>
                   <select
                     id="businessType"
@@ -316,46 +316,31 @@ const handleServiceToggle = (service: string) => {
                     value={formData.businessType}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   >
                     <option value="">Select your business type</option>
-                    {businessTypes.map(type => (
-                      <option key={type} value={type}>{type}</option>
-                    ))}
+                    {businessTypes.map(type => <option key={type} value={type}>{type}</option>)}
                   </select>
                 </div>
 
-                <div className="relative">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Service Needed <span className="text-red-600">*</span>
-                  </label>
-
+                {/* Services Multi-select */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">Service Needed</label>
                   <div
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 cursor-pointer focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    onClick={() => setIsServiceDropdownOpen(prev => !prev)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white cursor-pointer text-gray-900"
+                    onClick={() => setIsContactServiceDropdownOpen(prev => !prev)}
                   >
-                    <span className="text-gray-700">
-                      {formData.serviceNeeded.length > 0
-                        ? formData.serviceNeeded.join(', ')
-                        : 'Select services'}
-                    </span>
+                    {formData.serviceNeeded.length > 0 ? formData.serviceNeeded.join(', ') : 'Select services'}
                   </div>
-
-                  {isServiceDropdownOpen && (
-                    <div className="absolute mt-1 w-full max-h-60 overflow-y-auto border border-gray-300 rounded-lg bg-white shadow-lg z-50">
+                  {isContactServiceDropdownOpen && (
+                    <div className="absolute mt-1 w-full max-h-60 overflow-y-auto border border-gray-300 rounded-lg bg-white z-50">
                       {services.map(service => (
                         <div
                           key={service}
-                          className={`flex items-center px-4 py-2 cursor-pointer hover:bg-blue-50 ${formData.serviceNeeded.includes(service) ? 'bg-blue-100 text-blue-800' : 'text-gray-700'
-                            }`}
-                          onClick={() => handleServiceToggle(service)}
+                          className={`flex items-center px-4 py-2 cursor-pointer hover:bg-blue-50 ${formData.serviceNeeded.includes(service) ? 'bg-blue-100 text-blue-800' : 'text-gray-700'}`}
+                          onClick={() => toggleService(service)}
                         >
-                          <input
-                            type="checkbox"
-                            checked={formData.serviceNeeded.includes(service)}
-                            readOnly
-                            className="mr-2"
-                          />
+                          <input type="checkbox" checked={formData.serviceNeeded.includes(service)} readOnly className="mr-2" />
                           <span>{service}</span>
                         </div>
                       ))}
@@ -363,11 +348,10 @@ const handleServiceToggle = (service: string) => {
                   )}
                 </div>
 
-
-
+                {/* Budget */}
                 <div>
                   <label htmlFor="budgetRange" className="block text-sm font-medium text-gray-700 mb-2">
-                    Budget Range <span className='text-red-600'>*</span>
+                    Budget Range <span className="text-red-600">*</span>
                   </label>
                   <select
                     id="budgetRange"
@@ -375,35 +359,27 @@ const handleServiceToggle = (service: string) => {
                     value={formData.budgetRange}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   >
                     <option value="">Select your budget range</option>
-                    {budgetRanges.map(range => (
-                      <option key={range} value={range}>{range}</option>
-                    ))}
+                    {budgetRanges.map(range => <option key={range} value={range}>{range}</option>)}
                   </select>
                 </div>
 
+                {/* Message */}
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Project Details (Optional)
-                  </label>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Project Details (Optional)</label>
                   <textarea
                     id="message"
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
                     rows={4}
-                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                   />
                 </div>
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  disabled={isSubmitting}
-                  className="w-full"
-                >
+                <Button type="submit" size="lg" disabled={isSubmitting} className="w-full">
                   {isSubmitting ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
@@ -411,15 +387,10 @@ const handleServiceToggle = (service: string) => {
                     </>
                   ) : (
                     <>
-                      <Send className="mr-2 h-5 w-5" />
-                      Send Message
+                      <Send className="mr-2 h-5 w-5" /> Send Message
                     </>
                   )}
                 </Button>
-
-                <p className="text-sm text-gray-500 text-center">
-                  We will respond within 24 hours. Your information is kept confidential.
-                </p>
               </form>
 
               {/* Success Popup */}
@@ -437,12 +408,8 @@ const handleServiceToggle = (service: string) => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      Message Sent 
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      We will get back to you within 24 hours.
-                    </p>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Message Sent</h3>
+                    <p className="text-gray-600 text-sm">We will get back to you within 24 hours.</p>
                   </div>
                 </motion.div>
               )}
@@ -450,134 +417,6 @@ const handleServiceToggle = (service: string) => {
           </motion.div>
         </div>
       </div>
-
-      {/* Strategy Call Modal */}
-      <AnimatePresence>
-        {showStrategyModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-            onClick={() => setShowStrategyModal(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-sm sm:max-w-md w-full max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Modal Header */}
-              <div className="sticky top-0 bg-white border-b border-gray-200 p-6 rounded-t-2xl">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">Get Free Strategy Call</h3>
-                    <p className="text-gray-600 mt-1">Let's discuss your project requirements</p>
-                  </div>
-                  <button
-                    onClick={() => setShowStrategyModal(false)}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    <X className="h-5 w-5 text-gray-500" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Form Content */}
-              <form onSubmit={handleStrategySubmit} className="p-6 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <User className="h-4 w-4 inline mr-2" />
-                    Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={strategyFormData.name}
-                    onChange={handleStrategyInputChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Mail className="h-4 w-4 inline mr-2" />
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={strategyFormData.email}
-                    onChange={handleStrategyInputChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Phone className="h-4 w-4 inline mr-2" />
-                    Phone *
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={strategyFormData.phone}
-                    onChange={handleStrategyInputChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <MessageSquare className="h-4 w-4 inline mr-2" />
-                    Project Details
-                  </label>
-                  <textarea
-                    name="projectDetails"
-                    value={strategyFormData.projectDetails}
-                    onChange={handleStrategyInputChange}
-                    rows={4}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  />
-                </div>
-
-                <div className="flex gap-4 pt-4">
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="flex-1"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                        Sending...
-                      </>
-                    ) : (
-                      'Submit Request'
-                    )}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="lg"
-                    className="flex-1"
-                    onClick={() => setShowStrategyModal(false)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 };
