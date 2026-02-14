@@ -2,23 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, X, Phone, Mail } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Menu, X, Phone, Mail, House } from 'lucide-react';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navItems = [
+    { href: "#home", icon: House },
     { label: 'Services', href: '#services' },
     { label: 'Portfolio', href: '#portfolio' },
     { label: 'About', href: '#about' },
@@ -29,9 +26,7 @@ const Header = () => {
   const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false);
     const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -69,31 +64,49 @@ const Header = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="hidden lg:flex items-center space-x-8"
+              className="hidden lg:flex items-center space-x-6"
             >
-              {navItems.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleNavClick(item.href)}
-                  className={`text-sm font-medium transition-colors duration-200 hover:text-blue-600 ${
-                    isScrolled ? 'text-gray-700' : 'text-white'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+              {navItems.map((item, index) => {
+                // If the item has an icon, render the icon only
+                if (item.icon) {
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleNavClick(item.href)}
+                      className={`p-2 rounded-full transition-colors duration-200 ${
+                        isScrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-blue-300'
+                      }`}
+                      title="Home"
+                    >
+                      <Icon size={20} />
+                    </button>
+                  );
+                }
+
+                // Otherwise, render label text
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleNavClick(item.href)}
+                    className={`text-sm font-medium transition-colors duration-200 hover:text-blue-600 ${
+                      isScrolled ? 'text-gray-700' : 'text-white'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
             </motion.nav>
 
-            {/* Desktop CTA */}
+            {/* Desktop Contact Info */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="hidden lg:flex items-center space-x-4"
+              className="hidden lg:flex items-center space-x-4 text-sm"
             >
-              <div className={`flex items-center space-x-3 text-sm ${
-                isScrolled ? 'text-gray-600' : 'text-white'
-              }`}>
+              <div className={`flex items-center space-x-3 ${isScrolled ? 'text-gray-600' : 'text-white'}`}>
                 <div className="flex items-center">
                   <Phone className="h-4 w-4 mr-1" />
                   <span>+91-9355096544</span>
@@ -103,9 +116,6 @@ const Header = () => {
                   <span>pixelpulse340@gmail.com</span>
                 </div>
               </div>
-              {/* <Button size="sm" className="bg-blue-600 hover:bg-blue-700" onClick={() => setShowStrategyModal(true)}>
-                Free Strategy Call
-              </Button> */}
             </motion.div>
 
             {/* Mobile menu button */}
@@ -118,24 +128,18 @@ const Header = () => {
                 isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'
               }`}
             >
-              {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </motion.button>
           </div>
         </div>
       </motion.header>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: isMobileMenuOpen ? 1 : 0 }}
         transition={{ duration: 0.3 }}
-        className={`fixed inset-0 z-40 lg:hidden ${
-          isMobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
-        }`}
+        className={`fixed inset-0 z-40 lg:hidden ${isMobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
       >
         {/* Backdrop */}
         <motion.div
@@ -154,13 +158,9 @@ const Header = () => {
           className="absolute right-0 top-0 h-full w-72 sm:w-80 bg-white shadow-xl overflow-y-auto"
         >
           <div className="p-6">
-            {/* Logo and close button */}
+            {/* Logo + Close */}
             <div className="flex items-center justify-between mb-8">
-              <img 
-                src="/download.svg" 
-                alt="Pixel Pulses" 
-                className="h-8 w-auto"
-              />
+              <img src="/download.svg" alt="Pixel Pulses" className="h-8 w-auto" />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors duration-200"
@@ -171,15 +171,30 @@ const Header = () => {
 
             {/* Navigation */}
             <nav className="space-y-4 mb-8">
-              {navItems.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleNavClick(item.href)}
-                  className="block w-full text-left px-4 py-3 text-lg font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors duration-200"
-                >
-                  {item.label}
-                </button>
-              ))}
+              {navItems.map((item, index) => {
+                if (item.icon) {
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleNavClick(item.href)}
+                      className="w-full flex justify-center p-3 rounded-full text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition duration-200"
+                      title="Home"
+                    >
+                      <Icon size={20} />
+                    </button>
+                  );
+                }
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleNavClick(item.href)}
+                    className="block w-full text-left px-4 py-3 text-lg font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors duration-200"
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
             </nav>
 
             {/* Contact info */}
@@ -192,9 +207,6 @@ const Header = () => {
                 <Mail className="h-5 w-5 mr-3 text-blue-600" />
                 <span>pixelpulse340@gmail.com</span>
               </div>
-              {/* <Button className="w-full mt-6" onClick={() => setShowStrategyModal(true)}>
-                Free Strategy Call
-              </Button> */}
             </div>
           </div>
         </motion.div>

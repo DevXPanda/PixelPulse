@@ -2,13 +2,13 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Search, 
-  Lightbulb, 
-  Cog, 
-  TrendingUp, 
+import {
+  Search,
+  Lightbulb,
+  Cog,
+  TrendingUp,
   Rocket,
-  ArrowRight 
+  ArrowRight
 } from 'lucide-react';
 
 const Process = () => {
@@ -68,7 +68,7 @@ const Process = () => {
         <div className="relative">
           {/* Connection Line */}
           <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-200 via-purple-200 to-red-200 transform -translate-y-1/2"></div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {steps.map((step, index) => (
               <motion.div
@@ -131,12 +131,18 @@ const Process = () => {
                 Let's work together through this proven process to achieve your business goals
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
-                  Get Started
-                </button>
-                <button className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg font-semibold hover:bg-white/10 transition-colors duration-200">
-                  Schedule Consultation
-                </button>
+                <a href='#contact'>
+                  <button className="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+                    Get Started
+                  </button>
+
+                </a>
+                <a href='#home'>
+                  <button className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg font-semibold hover:bg-white/10 transition-colors duration-200">
+                    Schedule Consultation
+                  </button>
+
+                </a>
               </div>
             </div>
           </div>

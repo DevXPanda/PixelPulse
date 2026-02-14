@@ -407,29 +407,7 @@ const Services = () => {
           )}
         </AnimatePresence>
 
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          viewport={{ once: true }}
-          className="mt-16 text-center"
-        >
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-black/10"></div>
-            <div className="relative z-10">
-              <h3 className="text-3xl font-bold mb-4">
-                Ready to Transform Your Digital Presence?
-              </h3>
-              <p className="text-xl mb-8 text-blue-100">
-                Let's discuss how we can create a customized strategy for your business
-              </p>
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 border-0">
-                Schedule Free Consultation
-              </Button>
-            </div>
-          </div>
-        </motion.div>
+       
       </div>
     </section>
   );

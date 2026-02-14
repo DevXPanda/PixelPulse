@@ -77,7 +77,7 @@ const Portfolio = () => {
         </motion.div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
           {projects.map((project, index) => (
             <motion.div
               key={index}
@@ -87,28 +87,35 @@ const Portfolio = () => {
               viewport={{ once: true }}
               className="group flex"
             >
-              <div className="h-[500px] w-full bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col">
+              <div className="w-full bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-gray-100 flex flex-col">
+
                 {/* Header with gradient */}
                 <div className={`h-2 bg-gradient-to-r ${project.color}`}></div>
-                
-                <div className="p-8 flex flex-col h-full">
+
+                <div className="p-6 sm:p-8 flex flex-col h-full">
+
                   {/* Industry Badge */}
-                  <div className="inline-flex items-center px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-600 mb-4">
+                  <div className="inline-flex items-center px-3 py-1 bg-gray-100 rounded-full text-xs sm:text-sm font-medium text-gray-600 mb-4 w-fit">
                     {project.industry}
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors duration-300">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors duration-300 leading-snug">
                     {project.title}
                   </h3>
 
                   {/* Work Done */}
                   <div className="mb-6 flex-grow">
-                    <h4 className="text-sm font-semibold text-gray-700 mb-3">Work Done:</h4>
+                    <h4 className="text-sm font-semibold text-gray-700 mb-3 tracking-wide">
+                      Work Done:
+                    </h4>
                     <div className="space-y-2">
                       {project.work.map((item, itemIndex) => (
-                        <div key={itemIndex} className="flex items-center text-sm text-gray-600">
-                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-3"></div>
+                        <div
+                          key={itemIndex}
+                          className="flex items-start text-sm text-gray-600 leading-relaxed"
+                        >
+                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                           {item}
                         </div>
                       ))}
@@ -116,30 +123,30 @@ const Portfolio = () => {
                   </div>
 
                   {/* Result */}
-                  <div className={`p-4 rounded-xl bg-gradient-to-r ${project.color} bg-opacity-10 border border-gray-200 min-h-[80px] flex items-center`}>
+                  <div
+                    className={`p-4 sm:p-5 rounded-xl bg-gradient-to-r ${project.color} bg-opacity-10 border border-gray-200 flex items-center transition-all duration-300 group-hover:scale-[1.02]`}
+                  >
                     <div className="flex items-center w-full">
-                      <div className={`w-10 h-10 bg-gradient-to-r ${project.color} rounded-lg flex items-center justify-center mr-3 flex-shrink-0`}>
-                        <project.resultIcon className="h-5 w-5 text-white" />
+                      <div
+                        className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r ${project.color} rounded-lg flex items-center justify-center mr-3 flex-shrink-0 shadow-md`}
+                      >
+                        <project.resultIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                       </div>
+
                       <div className="flex-grow">
-                        <div className="text-sm font-medium text-gray-700">Result:</div>
-                        <div className="text-lg font-bold text-gray-900">
+                        <div className="text-base sm:text-lg font-bold text-gray-900 leading-snug">
                           {project.result}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* View Details Button */}
-                  <Button variant="outline" size="sm" className="w-full mt-6 group/btn">
-                    View Case Study
-                    <ExternalLink className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-                  </Button>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
+
 
         {/* Bottom CTA */}
         <motion.div
@@ -152,13 +159,19 @@ const Portfolio = () => {
           <h3 className="text-2xl font-bold text-gray-900 mb-4">
             Ready to be our next success story?
           </h3>
+
           <p className="text-gray-600 mb-8">
             Let's discuss how we can achieve similar results for your business
           </p>
-          <Button size="lg">
-            Start Your Project
-          </Button>
+
+          <a href="#contact">
+            <Button size="lg">
+              Start Your Project
+            </Button>
+          </a>
+
         </motion.div>
+
       </div>
     </section>
   );

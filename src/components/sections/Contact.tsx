@@ -16,15 +16,25 @@ import {
 import { Button } from '@/components/ui/Button';
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    businessType: string;
+    serviceNeeded: string[];
+    budgetRange: string;
+    message: string;
+  }>({
     name: '',
     email: '',
     phone: '',
     businessType: '',
-    serviceNeeded: '',
+    serviceNeeded: [],
     budgetRange: '',
     message: ''
   });
+
+
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -37,6 +47,17 @@ const Contact = () => {
     projectDetails: ''
   });
 
+  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
+
+const handleServiceToggle = (service: string) => {
+  setFormData(prev => {
+    const exists = prev.serviceNeeded.includes(service);
+    const updated = exists
+      ? prev.serviceNeeded.filter(s => s !== service)
+      : [...prev.serviceNeeded, service];
+    return { ...prev, serviceNeeded: updated };
+  });
+};
 
   const businessTypes = [
     'E-commerce',
@@ -62,13 +83,25 @@ const Contact = () => {
   ];
 
   const budgetRanges = [
-    '₹10,000 - ₹30,000',
-    '₹30,000 - ₹60,000',
-    '₹60,000 - ₹1,20,000',
-    '₹1,20,000 - ₹2,40,000',
-    '₹2,40,000+',
+    '10k - 30k',
+    '30k - 60k',
+    '60k - 1.2L',
+    '1.2L - 2.4L',
+    '2.4L+',
     'Discuss in consultation'
   ];
+
+  const handleInputChangeMulti = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, selectedOptions } = e.target;
+
+    const values = Array.from(selectedOptions, option => option.value);
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: values,
+    }));
+  };
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -132,7 +165,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-white">
+    <section id="contact" className="py-20 bg-white scroll-mt-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -215,10 +248,7 @@ const Contact = () => {
             </div>
 
             {/* WhatsApp CTA */}
-            {/* <Button className="w-full bg-green-500 hover:bg-green-600">
-              <MessageCircle className="mr-2 h-5 w-5" />
-              Chat on WhatsApp
-            </Button> */}
+
           </motion.div>
 
           {/* Contact Form */}
@@ -244,7 +274,6 @@ const Contact = () => {
                       onChange={handleInputChange}
                       required
                       className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
-                      placeholder="Your full name"
                     />
                   </div>
                   <div>
@@ -258,7 +287,6 @@ const Contact = () => {
                       value={formData.phone}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
-                      placeholder="Your phone number"
                     />
                   </div>
                 </div>
@@ -275,7 +303,6 @@ const Contact = () => {
                     onChange={handleInputChange}
                     required
                     className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
-                    placeholder="your@email.com"
                   />
                 </div>
 
@@ -298,24 +325,46 @@ const Contact = () => {
                   </select>
                 </div>
 
-                <div>
-                  <label htmlFor="serviceNeeded" className="block text-sm font-medium text-gray-700 mb-2">
-                    Service Needed <span className='text-red-600'>*</span>
+                <div className="relative">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Service Needed <span className="text-red-600">*</span>
                   </label>
-                  <select
-                    id="serviceNeeded"
-                    name="serviceNeeded"
-                    value={formData.serviceNeeded}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+
+                  <div
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-900 cursor-pointer focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    onClick={() => setIsServiceDropdownOpen(prev => !prev)}
                   >
-                    <option value="">Select a service</option>
-                    {services.map(service => (
-                      <option key={service} value={service}>{service}</option>
-                    ))}
-                  </select>
+                    <span className="text-gray-700">
+                      {formData.serviceNeeded.length > 0
+                        ? formData.serviceNeeded.join(', ')
+                        : 'Select services'}
+                    </span>
+                  </div>
+
+                  {isServiceDropdownOpen && (
+                    <div className="absolute mt-1 w-full max-h-60 overflow-y-auto border border-gray-300 rounded-lg bg-white shadow-lg z-50">
+                      {services.map(service => (
+                        <div
+                          key={service}
+                          className={`flex items-center px-4 py-2 cursor-pointer hover:bg-blue-50 ${formData.serviceNeeded.includes(service) ? 'bg-blue-100 text-blue-800' : 'text-gray-700'
+                            }`}
+                          onClick={() => handleServiceToggle(service)}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={formData.serviceNeeded.includes(service)}
+                            readOnly
+                            className="mr-2"
+                          />
+                          <span>{service}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
+
+
                 <div>
                   <label htmlFor="budgetRange" className="block text-sm font-medium text-gray-700 mb-2">
                     Budget Range <span className='text-red-600'>*</span>
@@ -346,7 +395,6 @@ const Contact = () => {
                     onChange={handleInputChange}
                     rows={4}
                     className="w-full px-4 py-3 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
-                    placeholder="Tell me more about your project..."
                   />
                 </div>
 
@@ -390,7 +438,7 @@ const Contact = () => {
                       </svg>
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      Message Sent 🎉
+                      Message Sent 
                     </h3>
                     <p className="text-gray-600 text-sm">
                       We will get back to you within 24 hours.
@@ -451,7 +499,6 @@ const Contact = () => {
                     onChange={handleStrategyInputChange}
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                    placeholder="Your full name"
                   />
                 </div>
 
@@ -467,7 +514,6 @@ const Contact = () => {
                     onChange={handleStrategyInputChange}
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                    placeholder="your@email.com"
                   />
                 </div>
 
@@ -483,7 +529,6 @@ const Contact = () => {
                     onChange={handleStrategyInputChange}
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                    placeholder="Your phone number"
                   />
                 </div>
 
@@ -498,7 +543,6 @@ const Contact = () => {
                     onChange={handleStrategyInputChange}
                     rows={4}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                    placeholder="Tell us about your project..."
                   />
                 </div>
 
