@@ -8,7 +8,8 @@ import {
   BarChart3, 
   MessageCircle, 
   Puzzle,
-  Zap 
+  Zap,
+  Target
 } from 'lucide-react';
 
 const WhyChooseMe = () => {
@@ -37,6 +38,11 @@ const WhyChooseMe = () => {
       icon: Puzzle,
       title: "End-to-End Solutions",
       description: "From strategy to execution and beyond, I handle all aspects of your digital presence"
+    },
+    {
+      icon: Target,
+      title: "Targeted Growth",
+      description: "Precise audience targeting and conversion optimization to ensure your message reaches the right people"
     }
   ];
 
