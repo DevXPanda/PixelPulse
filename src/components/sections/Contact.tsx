@@ -181,10 +181,10 @@ const Contact = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            Let's Discuss Your Project
+            Let&apos;s Discuss Your Project
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ready to scale your business online? Get in touch and let's explore how we can work together
+            Ready to scale your business online? Get in touch and let&apos;s explore how we can work together
           </p>
         </motion.div>
 
@@ -200,7 +200,7 @@ const Contact = () => {
             <div>
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h3>
               <p className="text-gray-600 mb-8">
-                We are here to help you grow your business. Whether you need a new website, marketing strategy, or complete digital transformation, let's talk about your goals.
+                We are here to help you grow your business. Whether you need a new website, marketing strategy, or complete digital transformation, let&apos;s talk about your goals.
               </p>
             </div>
 

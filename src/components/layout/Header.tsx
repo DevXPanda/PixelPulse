@@ -1,216 +1,193 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Menu, X, Phone, Mail, House } from 'lucide-react';
+import { motion as motionFramer, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
+import { Button } from '@/components/ui/Button';
 
-const Header = () => {
+interface HeaderProps {
+  onContactClick: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onContactClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navItems = [
-    { href: "#home", icon: House },
+    { label: 'Home', href: '#home' },
     { label: 'Services', href: '#services' },
     { label: 'Portfolio', href: '#portfolio' },
-    { label: 'About', href: '#about' },
-    { label: 'Process', href: '#process' },
     { label: 'Contact', href: '#contact' }
   ];
 
   const handleNavClick = (href: string) => {
     setIsMobileMenuOpen(false);
+    
+    if (href === '#contact') {
+      onContactClick();
+      return;
+    }
+
     const element = document.querySelector(href);
-    if (element) element.scrollIntoView({ behavior: 'smooth' });
+    if (element) {
+      const offset = 80;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
     <>
-      <motion.header
+      <motionFramer.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-lg rounded-full m-2 mt-4 border border-gray-200'
-            : 'bg-transparent'
+            ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-lg border-b border-slate-200/50 dark:border-slate-800/50 py-1.5'
+            : 'bg-transparent py-2.5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+          <div className="flex items-center justify-between h-12">
             {/* Logo */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex items-center"
+            <div 
+              onClick={() => handleNavClick('#home')}
+              className="flex items-center cursor-pointer"
             >
-              <img 
+              <Image 
                 src="/download.svg" 
-                alt="Pixel Pulses" 
-                className={`h-12 w-auto transition-all duration-300 ${
-                  isScrolled ? 'opacity-90' : 'opacity-100'
+                alt="Pixel Pulses Logo" 
+                width={120}
+                height={32}
+                priority
+                className={`w-auto h-8 sm:h-9 transition-all duration-300 ${
+                  isScrolled && !isMobileMenuOpen ? 'brightness-90 invert-0 dark:invert' : 'brightness-100 invert dark:invert-0'
                 }`}
               />
-            </motion.div>
+            </div>
 
             {/* Desktop Navigation */}
-            <motion.nav
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="hidden lg:flex items-center space-x-6"
-            >
-              {navItems.map((item, index) => {
-                // If the item has an icon, render the icon only
-                if (item.icon) {
-                  const Icon = item.icon;
-                  return (
-                    <button
-                      key={index}
-                      onClick={() => handleNavClick(item.href)}
-                      className={`p-2 rounded-full transition-colors duration-200 ${
-                        isScrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-blue-300'
-                      }`}
-                      title="Home"
-                    >
-                      <Icon size={20} />
-                    </button>
-                  );
-                }
-
-                // Otherwise, render label text
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleNavClick(item.href)}
-                    className={`text-sm font-medium transition-colors duration-200 hover:text-blue-600 ${
-                      isScrolled ? 'text-gray-700' : 'text-white'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                );
-              })}
-            </motion.nav>
-
-            {/* Desktop Contact Info */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="hidden lg:flex items-center space-x-4 text-sm"
-            >
-              <div className={`flex items-center space-x-3 ${isScrolled ? 'text-gray-600' : 'text-white'}`}>
-                <div className="flex items-center">
-                  <Phone className="h-4 w-4 mr-1" />
-                  <span>+91-9355096544</span>
-                </div>
-                <div className="flex items-center">
-                  <Mail className="h-4 w-4 mr-1" />
-                  <span>pixelpulse340@gmail.com</span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Mobile menu button */}
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`lg:hidden p-2 rounded-lg transition-colors duration-200 ${
-                isScrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'
-              }`}
-            >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </motion.button>
-          </div>
-        </div>
-      </motion.header>
-
-      {/* Mobile Menu */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isMobileMenuOpen ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-        className={`fixed inset-0 z-40 lg:hidden ${isMobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
-      >
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isMobileMenuOpen ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-          className="absolute inset-0 bg-black/50"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-
-        {/* Menu panel */}
-        <motion.div
-          initial={{ x: '100%' }}
-          animate={{ x: isMobileMenuOpen ? 0 : '100%' }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
-          className="absolute right-0 top-0 h-full w-72 sm:w-80 bg-white shadow-xl overflow-y-auto"
-        >
-          <div className="p-6">
-            {/* Logo + Close */}
-            <div className="flex items-center justify-between mb-8">
-              <img src="/download.svg" alt="Pixel Pulses" className="h-8 w-auto" />
-              <button
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors duration-200"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-
-            {/* Navigation */}
-            <nav className="space-y-4 mb-8">
-              {navItems.map((item, index) => {
-                if (item.icon) {
-                  const Icon = item.icon;
-                  return (
-                    <button
-                      key={index}
-                      onClick={() => handleNavClick(item.href)}
-                      className="w-full flex justify-center p-3 rounded-full text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition duration-200"
-                      title="Home"
-                    >
-                      <Icon size={20} />
-                    </button>
-                  );
-                }
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleNavClick(item.href)}
-                    className="block w-full text-left px-4 py-3 text-lg font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors duration-200"
-                  >
-                    {item.label}
-                  </button>
-                );
-              })}
+            <nav className="hidden md:flex items-center space-x-6">
+              {navItems.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleNavClick(item.href)}
+                  className={`text-sm font-medium transition-colors duration-200 ${
+                    isScrolled
+                      ? 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400'
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
             </nav>
 
-            {/* Contact info */}
-            <div className="border-t border-gray-200 pt-6 space-y-4">
-              <div className="flex items-center text-gray-600">
-                <Phone className="h-5 w-5 mr-3 text-blue-600" />
-                <span>+91-9355096544</span>
-              </div>
-              <div className="flex items-center text-gray-600">
-                <Mail className="h-5 w-5 mr-3 text-blue-600" />
-                <span>pixelpulse340@gmail.com</span>
-              </div>
+            {/* Desktop CTA */}
+            <div className="hidden md:flex items-center space-x-4">
+              <Button
+                variant={isScrolled ? 'primary' : 'outline'}
+                size="sm"
+                onClick={onContactClick}
+                className={!isScrolled ? 'border-white text-white hover:bg-white hover:text-slate-900' : ''}
+              >
+                Get Started
+              </Button>
             </div>
+
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`md:hidden p-2 rounded-lg transition-colors duration-200 ${
+                isScrolled
+                  ? 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-850'
+                  : 'text-white hover:bg-white/10'
+              }`}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </motionFramer.header>
+
+      {/* Mobile Menu Dropdown Card */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-slate-950/50 backdrop-blur-xs z-40 md:hidden animate-fade-in"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+
+            {/* Dropdown Panel Card */}
+            <motionFramer.div
+              initial={{ opacity: 0, scale: 0.95, y: -10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -10 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className={`fixed top-[68px] right-4 left-4 max-w-sm ml-auto backdrop-blur-xl shadow-2xl rounded-2xl p-5 flex flex-col z-50 md:hidden border transition-colors duration-300 ${
+                isScrolled
+                  ? 'bg-white/95 border-slate-200/80 text-slate-800 shadow-slate-200/30'
+                  : 'bg-slate-950/98 border-slate-800/60 text-white shadow-black/40'
+              }`}
+            >
+              {/* Navigation items */}
+              <nav className="flex flex-col space-y-1 mb-4">
+                {navItems.map((item, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleNavClick(item.href)}
+                    className={`block w-full text-left px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 flex items-center justify-between group ${
+                      isScrolled
+                        ? 'text-slate-650 hover:text-slate-900 hover:bg-slate-100/80'
+                        : 'text-slate-300 hover:text-white hover:bg-slate-900/60'
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                    <span className={`opacity-0 group-hover:opacity-100 transition-all duration-250 transform translate-x-[-4px] group-hover:translate-x-0 ${
+                      isScrolled ? 'text-blue-600' : 'text-indigo-400'
+                    }`}>
+                      →
+                    </span>
+                  </button>
+                ))}
+              </nav>
+
+              {/* CTA Button */}
+              <div className={`border-t pt-4 ${isScrolled ? 'border-slate-100' : 'border-slate-800/60'}`}>
+                <Button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onContactClick();
+                  }}
+                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium py-2.5 rounded-xl shadow-lg border-0 transition-all duration-200 text-sm"
+                >
+                  Get Started
+                </Button>
+              </div>
+            </motionFramer.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };

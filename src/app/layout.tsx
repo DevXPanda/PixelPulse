@@ -72,17 +72,13 @@
 // }
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 /* Correct way to set mobile viewport in App Router */
@@ -150,7 +146,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="text-base">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} font-sans antialiased`}
       >
         {children}
         <Analytics />

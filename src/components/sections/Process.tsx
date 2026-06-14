@@ -128,7 +128,7 @@ const Process = () => {
                 Ready to Start Your Growth Journey?
               </h3>
               <p className="text-xl mb-8 text-blue-100">
-                Let's work together through this proven process to achieve your business goals
+                Let&apos;s work together through this proven process to achieve your business goals
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href='#contact'>

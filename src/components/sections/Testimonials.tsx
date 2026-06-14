@@ -101,7 +101,7 @@ const Testimonials = () => {
 
                 {/* Content */}
                 <blockquote className="text-gray-700 mb-6 leading-relaxed">
-                  "{testimonial.content}"
+                  &ldquo;{testimonial.content}&rdquo;
                 </blockquote>
 
                 {/* Author */}
@@ -135,7 +135,7 @@ const Testimonials = () => {
             Ready to join our success stories?
           </h3>
           <p className="text-gray-600 mb-8">
-            Let's create your own success story with results-driven digital solutions
+            Let&apos;s create your own success story with results-driven digital solutions
           </p>
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white inline-block">
             <div className="flex items-center justify-center space-x-8">

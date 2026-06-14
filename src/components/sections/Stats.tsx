@@ -17,6 +17,13 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
+const targetStats = {
+  projects: 50,
+  campaigns: 100,
+  websites: 45,
+  industries: 30
+};
+
 const Stats = () => {
   const [counters, setCounters] = useState({
     projects: 0,
@@ -89,12 +96,7 @@ const Stats = () => {
     }
   ];
 
-  const targetStats = {
-    projects: 50,
-    campaigns: 100,
-    websites: 45,
-    industries: 30
-  };
+
 
   useEffect(() => {
     const duration = 2000; // 2 seconds

@@ -55,7 +55,7 @@ const FinalCTA = () => {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="text-lg sm:text-xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed"
           >
-            Let's create a powerful digital presence that drives growth, increases revenue,
+            Let&apos;s create a powerful digital presence that drives growth, increases revenue,
             and establishes your brand as an industry leader.
           </motion.p>
 
@@ -91,10 +91,10 @@ const FinalCTA = () => {
             className="mt-16 p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 max-w-2xl mx-auto"
           >
             <p className="text-gray-300 text-lg">
-              "The best time to start was yesterday. The second best time is now."
+              &ldquo;The best time to start was yesterday. The second best time is now.&rdquo;
             </p>
             <p className="text-gray-400 mt-2">
-              Let's build something amazing together.
+              Let&apos;s build something amazing together.
             </p>
           </motion.div>
         </motion.div>
